@@ -6,8 +6,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.util.Scanner;
+import org.json.JSONObject;
 
-public class XMLreader {
+public class XMLReader {
     public static void main(String[] args) {
         try {
             // Specify the file path relative to the current directory
@@ -26,46 +27,41 @@ public class XMLreader {
                 selectedFields[i] = selectedFields[i].trim();
             }
             
-            System.out.println("Root element: " + doc.getDocumentElement().getNodeName());
             NodeList nList = doc.getElementsByTagName("record");
             
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 Node nNode = nList.item(temp);
-                System.out.println("\nCurrent Element: " + nNode.getNodeName());
                 
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
+                    JSONObject jsonObject = new JSONObject();
                     
                     for (String field : selectedFields) {
                         switch (field) {
                             case "name":
-                                System.out.println("Name: " 
-                                    + eElement.getElementsByTagName("name").item(0).getTextContent());
+                                jsonObject.put("name", eElement.getElementsByTagName("name").item(0).getTextContent());
                                 break;
                             case "postalZip":
-                                System.out.println("Postal Zip: " 
-                                    + eElement.getElementsByTagName("postalZip").item(0).getTextContent());
+                                jsonObject.put("postalZip", eElement.getElementsByTagName("postalZip").item(0).getTextContent());
                                 break;
                             case "region":
-                                System.out.println("Region: " 
-                                    + eElement.getElementsByTagName("region").item(0).getTextContent());
+                                jsonObject.put("region", eElement.getElementsByTagName("region").item(0).getTextContent());
                                 break;
                             case "country":
-                                System.out.println("Country: " 
-                                    + eElement.getElementsByTagName("country").item(0).getTextContent());
+                                jsonObject.put("country", eElement.getElementsByTagName("country").item(0).getTextContent());
                                 break;
                             case "address":
-                                System.out.println("Address: " 
-                                    + eElement.getElementsByTagName("address").item(0).getTextContent());
+                                jsonObject.put("address", eElement.getElementsByTagName("address").item(0).getTextContent());
                                 break;
                             case "list":
-                                System.out.println("List: " 
-                                    + eElement.getElementsByTagName("list").item(0).getTextContent());
+                                jsonObject.put("list", eElement.getElementsByTagName("list").item(0).getTextContent());
                                 break;
                             default:
                                 System.out.println("Invalid field: " + field);
                         }
                     }
+                    
+                    System.out.println(jsonObject.toString(4)); // Pretty print JSON with an indent factor of 4
                 }
             }
         } catch (Exception e) {
@@ -73,4 +69,6 @@ public class XMLreader {
         }
     }
 }
+
+
 
