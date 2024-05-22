@@ -6,11 +6,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.util.Scanner;
-import java.util.HashSet;
-import java.util.Set;
 import org.json.JSONObject;
 
-public class XMLReader {
+public class XMLreader {
     public static void main(String[] args) {
         try {
             // Specify the file path relative to the current directory
@@ -25,20 +23,8 @@ public class XMLReader {
             System.out.println("Select the fields to display (comma separated): name, postalZip, region, country, address, list");
             String[] selectedFields = scanner.nextLine().split(",");
             
-            // Trim and validate fields
-            Set<String> validFields = new HashSet<>();
             for (int i = 0; i < selectedFields.length; i++) {
                 selectedFields[i] = selectedFields[i].trim();
-                if (isValidField(selectedFields[i])) {
-                    validFields.add(selectedFields[i]);
-                } else {
-                    System.out.println("Invalid field: " + selectedFields[i]);
-                }
-            }
-            
-            if (validFields.isEmpty()) {
-                System.out.println("No valid fields selected. Exiting program.");
-                return;
             }
             
             NodeList nList = doc.getElementsByTagName("record");
@@ -50,30 +36,28 @@ public class XMLReader {
                     Element eElement = (Element) nNode;
                     JSONObject jsonObject = new JSONObject();
                     
-                    for (String field : validFields) {
-                        try {
-                            switch (field) {
-                                case "name":
-                                    jsonObject.put("name", eElement.getElementsByTagName("name").item(0).getTextContent());
-                                    break;
-                                case "postalZip":
-                                    jsonObject.put("postalZip", eElement.getElementsByTagName("postalZip").item(0).getTextContent());
-                                    break;
-                                case "region":
-                                    jsonObject.put("region", eElement.getElementsByTagName("region").item(0).getTextContent());
-                                    break;
-                                case "country":
-                                    jsonObject.put("country", eElement.getElementsByTagName("country").item(0).getTextContent());
-                                    break;
-                                case "address":
-                                    jsonObject.put("address", eElement.getElementsByTagName("address").item(0).getTextContent());
-                                    break;
-                                case "list":
-                                    jsonObject.put("list", eElement.getElementsByTagName("list").item(0).getTextContent());
-                                    break;
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Error processing field: " + field);
+                    for (String field : selectedFields) {
+                        switch (field) {
+                            case "name":
+                                jsonObject.put("name", eElement.getElementsByTagName("name").item(0).getTextContent());
+                                break;
+                            case "postalZip":
+                                jsonObject.put("postalZip", eElement.getElementsByTagName("postalZip").item(0).getTextContent());
+                                break;
+                            case "region":
+                                jsonObject.put("region", eElement.getElementsByTagName("region").item(0).getTextContent());
+                                break;
+                            case "country":
+                                jsonObject.put("country", eElement.getElementsByTagName("country").item(0).getTextContent());
+                                break;
+                            case "address":
+                                jsonObject.put("address", eElement.getElementsByTagName("address").item(0).getTextContent());
+                                break;
+                            case "list":
+                                jsonObject.put("list", eElement.getElementsByTagName("list").item(0).getTextContent());
+                                break;
+                            default:
+                                System.out.println("Invalid field: " + field);
                         }
                     }
                     
@@ -84,22 +68,4 @@ public class XMLReader {
             e.printStackTrace();
         }
     }
-
-    private static boolean isValidField(String field) {
-        switch (field) {
-            case "name":
-            case "postalZip":
-            case "region":
-            case "country":
-            case "address":
-            case "list":
-                return true;
-            default:
-                return false;
-        }
-    }
 }
-
-
-
-
